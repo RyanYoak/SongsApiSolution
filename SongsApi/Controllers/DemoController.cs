@@ -8,14 +8,17 @@ namespace SongsApi.Controllers
 {
     public class DemoController : ControllerBase
     {
+        private readonly IProviderServerStatus _statusService;
+
+        public DemoController(IProviderServerStatus statusService)
+        {
+            _statusService = statusService;
+        }
+
         [HttpGet("/status")]
         public ActionResult<GetStatusResponse> GetTheStatus()
         {
-            var response = new GetStatusResponse
-            {
-                message = "Everthing is Operational!",
-                lastChecked = DateTime.Now
-            };
+            GetStatusResponse response = _statusService.GetMyStatus();
             return Ok(response);
         }
 
