@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SongsApi.Domain;
+using SongsApi.Models.Songs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,10 +21,22 @@ namespace SongsApi.Controllers
         [HttpGet("/songs")]
         public async Task<ActionResult> GetAllSongs()
         {
-            var response = await _context.Songs
+            var response = new GetSongsResponse();
+
+            var data = await _context.Songs
                 .Where(song => song.IsActive)
+                .Select(song => new SongSummaryItem
+                {
+                    Id = song.Id,
+                    Title = song.Title,
+                    Artist = song.Artist,
+                    RecommendedBy = song.RecomendedBy
+                })
                 .OrderBy(song => song.Title)
                 .ToListAsync();
+
+            response.data = data;
+
             return Ok(response);
         }
     }

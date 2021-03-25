@@ -36,7 +36,11 @@ namespace SongsApi
             });
             services.AddScoped<IProviderServerStatus, HopeServerStatus>();
 
-            services.AddControllers();
+            // services.AddControllers() <= original
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.IgnoreNullValues = true;
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SongsApi", Version = "v1" });
