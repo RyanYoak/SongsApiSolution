@@ -15,5 +15,10 @@ namespace SongsApi.Domain
         {
 
         }
+
+        public IQueryable<Song> GetActiveSongs()
+        {
+            return Songs.Where(s => s.IsActive);
+        }
     }
 }
