@@ -24,11 +24,26 @@ namespace SongsApi.Controllers
             _config = config;
         }
 
+        [HttpDelete("/songs/{id:int}")]
+        public async Task<ActionResult> RemoveSong(int id)
+        {
+            var savedSong = await _context.GetActiveSongs().SingleOrDefaultAsync(s => s.Id == id);
+
+            if(savedSong != null)
+            {
+                savedSong.IsActive = false;
+                await _context.SaveChangesAsync();
+            }
+
+            return NoContent();
+        }
+
+
         [HttpPost("/songs")]
         public async Task<ActionResult> AddASong([FromBody] PostSongRequest request)
         {
             /// Simulating network delay
-            await Task.Delay(8 * 1000);
+            //await Task.Delay(8 * 1000);
 
 
             /// 1. Validate the entity (maybe use fluent validation)
@@ -79,7 +94,7 @@ namespace SongsApi.Controllers
         {
 
             /// Simulating network delay
-            await Task.Delay(8 * 1000);
+            //await Task.Delay(8 * 1000);
 
             var response = new GetSongsResponse();
 
